@@ -54,8 +54,7 @@ where T: bincode::Encode + bincode::Decode<()> + PartialEq + std::fmt::Debug {
     let got_encoded = bincode::encode_to_vec(value, bincode_config())?;
     println!("let encoded = vec!{:?};", got_encoded);
 
-    let (decoded, n): (T, usize) = bincode::decode_from_slice(encoded, bincode_config())
-        .map_err(|e| anyhow::anyhow!("Failed to decode: {}", e))?;
+    let (decoded, n): (T, usize) = bincode::decode_from_slice(encoded, bincode_config())?;
 
     assert_eq!(n, encoded.len());
     assert_eq!(&decoded, value);
