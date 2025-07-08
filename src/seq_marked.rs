@@ -277,3 +277,65 @@ mod tests {
         Ok(())
     }
 }
+
+#[cfg(test)]
+#[cfg(feature = "bincode")]
+mod tests_bincode {
+
+    use super::*;
+    use crate::testing::bincode_config;
+    use crate::testing::test_bincode_decode;
+
+    #[test]
+    fn test_marked_bincode() {
+        let a = SeqMarked::new_normal(5, 1u64);
+        let encoded = bincode::encode_to_vec(&a, bincode_config()).unwrap();
+        let (decoded, n): (SeqMarked<u64>, usize) =
+            bincode::decode_from_slice(&encoded, bincode_config()).unwrap();
+        assert_eq!(n, 3);
+        assert_eq!(a, decoded);
+    }
+
+    #[test]
+    fn test_marked_bincode_decode_v010() -> anyhow::Result<()> {
+        let value = SeqMarked::new_normal(5, 1u64);
+        let encoded = vec![5, 0, 1];
+
+        test_bincode_decode(&encoded, &value)?;
+
+        let value = SeqMarked::<u64>::new_tombstone(6);
+        let encoded = vec![6, 1];
+
+        test_bincode_decode(&encoded, &value)?;
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+#[cfg(feature = "serde")]
+mod tests_serde {
+    use super::*;
+    use crate::testing::test_serde_decode;
+
+    #[test]
+    fn test_marked_serde() {
+        let a = SeqMarked::new_normal(5, 1u64);
+        let encoded = serde_json::to_string(&a).unwrap();
+        let decoded: SeqMarked<u64> = serde_json::from_str(&encoded).unwrap();
+        assert_eq!(a, decoded);
+    }
+
+    #[test]
+    fn test_marked_serde_decode_v010() -> anyhow::Result<()> {
+        let value = SeqMarked::new_normal(5, 1u64);
+        let encoded = r#"{"seq":5,"marked":{"Normal":1}}"#;
+
+        test_serde_decode(encoded, &value)?;
+
+        let value = SeqMarked::<u64>::new_tombstone(6);
+        let encoded = r#"{"seq":6,"marked":"TombStone"}"#;
+
+        test_serde_decode(encoded, &value)?;
+        Ok(())
+    }
+}
