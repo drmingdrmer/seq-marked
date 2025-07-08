@@ -1,0 +1,17 @@
+[package]
+name = "seqmarked"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde             = { version = "1.0", features = ["derive"], optional = true }
+bincode           = { version = "2.0.0-rc.3", features = ["serde"], optional = true }
+
+
+[dev-dependencies]
+anyhow = "1.0"
+serde_json = "1.0"
+
+[features]
+
+default = []
