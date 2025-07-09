@@ -2,6 +2,13 @@
 name = "seqmarked"
 version = "0.1.0"
 edition = "2024"
+authors = [
+    "Zhang Yanpo <drdr.xp@gmail.com>",
+]
+description = "Sequence-numbered values with tombstone support for LSM trees and versioned data."
+license = "Apache-2.0"
+repository = "https://github.com/drmingdrmer/seqmarked"
+documentation = "https://drmingdrmer.github.io/seqmarked/"
 
 [dependencies]
 serde             = { version = "1.0", features = ["derive"], optional = true }
