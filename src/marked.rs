@@ -13,8 +13,14 @@
 #[derive(Clone)]
 #[derive(PartialEq, Eq)]
 #[derive(PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
+#[cfg_attr(
+    feature = "seqmarked-serde",
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(
+    feature = "seqmarked-bincode",
+    derive(bincode::Encode, bincode::Decode)
+)]
 pub enum Marked<D> {
     /// Normal data.
     // Keep `Normal` as the first variant so that `TombStone` is greater than `Normal`.
@@ -42,7 +48,7 @@ mod tests {
 }
 
 #[cfg(test)]
-#[cfg(feature = "bincode")]
+#[cfg(feature = "seqmarked-bincode")]
 mod tests_bincode {
 
     use super::*;
@@ -75,7 +81,7 @@ mod tests_bincode {
 }
 
 #[cfg(test)]
-#[cfg(feature = "serde")]
+#[cfg(feature = "seqmarked-serde")]
 mod tests_serde {
     use super::*;
     use crate::testing::test_serde_decode;

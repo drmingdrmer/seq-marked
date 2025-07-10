@@ -17,8 +17,14 @@ use crate::Marked;
 #[derive(Clone)]
 #[derive(PartialEq, Eq)]
 #[derive(PartialOrd, Ord)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-#[cfg_attr(feature = "bincode", derive(bincode::Encode, bincode::Decode))]
+#[cfg_attr(
+    feature = "seqmarked-serde",
+    derive(serde::Serialize, serde::Deserialize)
+)]
+#[cfg_attr(
+    feature = "seqmarked-bincode",
+    derive(bincode::Encode, bincode::Decode)
+)]
 pub struct SeqMarked<D = Vec<u8>> {
     // Keep the `seq` as the first field so that it can be compared first.
     seq: u64,
@@ -392,7 +398,7 @@ mod tests {
 }
 
 #[cfg(test)]
-#[cfg(feature = "bincode")]
+#[cfg(feature = "seqmarked-bincode")]
 mod tests_bincode {
 
     use super::*;
@@ -425,7 +431,7 @@ mod tests_bincode {
 }
 
 #[cfg(test)]
-#[cfg(feature = "serde")]
+#[cfg(feature = "seqmarked-serde")]
 mod tests_serde {
     use super::*;
     use crate::testing::test_serde_decode;

@@ -22,6 +22,7 @@
 
 mod marked;
 mod seq_marked;
+mod seq_marked_conv;
 
 #[cfg(test)]
 pub(crate) mod testing;

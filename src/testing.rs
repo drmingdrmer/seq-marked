@@ -45,12 +45,12 @@ pub(crate) fn ts<D>(seq: u64) -> SeqMarked<D> {
     SeqMarked::new_tombstone(seq)
 }
 
-#[cfg(feature = "bincode")]
+#[cfg(feature = "seqmarked-bincode")]
 pub fn bincode_config() -> impl bincode::config::Config {
     bincode::config::standard().with_big_endian().with_variable_int_encoding()
 }
 
-#[cfg(feature = "bincode")]
+#[cfg(feature = "seqmarked-bincode")]
 pub fn test_bincode_decode<T>(encoded: &[u8], value: &T) -> anyhow::Result<()>
 where T: bincode::Encode + bincode::Decode<()> + PartialEq + std::fmt::Debug {
     let got_encoded = bincode::encode_to_vec(value, bincode_config())?;
@@ -63,7 +63,7 @@ where T: bincode::Encode + bincode::Decode<()> + PartialEq + std::fmt::Debug {
     Ok(())
 }
 
-#[cfg(feature = "serde")]
+#[cfg(feature = "seqmarked-serde")]
 pub fn test_serde_decode<T>(encoded: &str, value: &T) -> anyhow::Result<()>
 where T: serde::Serialize + serde::de::DeserializeOwned + PartialEq + std::fmt::Debug {
     let got_encoded = serde_json::to_string(value)?;

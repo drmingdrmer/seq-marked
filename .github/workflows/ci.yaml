@@ -48,10 +48,12 @@ jobs:
 
           - toolchain: "nightly"
             features: ""
+
           - toolchain: "nightly"
-            features: "serde"
+            features: "seqmarked-serde"
+
           - toolchain: "nightly"
-            features: "bincode"
+            features: "seqmarked-bincode"
 
     steps:
       - name: Setup | Checkout
