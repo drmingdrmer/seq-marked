@@ -42,6 +42,18 @@ impl<D> SeqMarked<D> {
         }
     }
 
+    /// Represents an absent record (not even marked as deleted).
+    pub fn new_absent() -> Self {
+        Self {
+            seq: 0,
+            marked: Marked::TombStone,
+        }
+    }
+
+    pub fn new_not_found() -> Self {
+        Self::new_absent()
+    }
+
     /// Returns `true` if this is normal data.
     pub fn is_normal(&self) -> bool {
         !self.is_tombstone()
@@ -53,6 +65,14 @@ impl<D> SeqMarked<D> {
             Marked::Normal(_) => false,
             Marked::TombStone => true,
         }
+    }
+
+    pub fn is_not_found(&self) -> bool {
+        self.is_absent()
+    }
+
+    pub fn is_absent(&self) -> bool {
+        self.seq == 0 && self.is_tombstone()
     }
 
     /// Transforms data `D` to `U` while preserving sequence and tombstone state.
@@ -101,6 +121,16 @@ impl<D> SeqMarked<D> {
     /// Returns the sequence number.
     pub fn seq(&self) -> u64 {
         self.seq
+    }
+
+    /// Returns the maximum of two values.
+    pub fn max(a: Self, b: Self) -> Self {
+        if a.order_key() > b.order_key() { a } else { b }
+    }
+
+    /// Returns the maximum of two values.
+    pub fn max_ref<'l>(a: &'l Self, b: &'l Self) -> &'l Self {
+        if a.order_key() > b.order_key() { a } else { b }
     }
 
     /// Returns reference to data if normal, `None` if tombstone.
@@ -296,6 +326,68 @@ mod tests {
         assert!(ts::<()>(2) < ts(3));
 
         Ok(())
+    }
+
+    #[test]
+    fn test_new_absent() {
+        let absent = SeqMarked::<u64>::new_absent();
+        assert_eq!(absent.seq, 0);
+        assert!(absent.is_tombstone());
+    }
+
+    #[test]
+    fn test_max() {
+        assert_eq!(
+            SeqMarked::<u64>::new_normal(2, 1),
+            SeqMarked::<u64>::max(
+                SeqMarked::<u64>::new_normal(1, 1),
+                SeqMarked::<u64>::new_normal(2, 1)
+            )
+        );
+        assert_eq!(
+            SeqMarked::<u64>::new_normal(2, 1),
+            SeqMarked::<u64>::max(
+                SeqMarked::<u64>::new_normal(1, 2),
+                SeqMarked::<u64>::new_normal(2, 1)
+            )
+        );
+        assert_eq!(
+            SeqMarked::<u64>::new_tombstone(2),
+            SeqMarked::<u64>::max(
+                SeqMarked::<u64>::new_normal(2, 1),
+                SeqMarked::<u64>::new_tombstone(2)
+            )
+        );
+        assert_eq!(
+            SeqMarked::<u64>::new_tombstone(2),
+            SeqMarked::<u64>::max(
+                SeqMarked::<u64>::new_tombstone(1),
+                SeqMarked::<u64>::new_tombstone(2)
+            )
+        );
+    }
+
+    #[test]
+    fn test_max_ref() {
+        let m1 = SeqMarked::new_normal(1, 2);
+        let m2 = SeqMarked::new_normal(3, 2);
+        let m3 = SeqMarked::new_tombstone(2);
+
+        assert_eq!(SeqMarked::max_ref(&m1, &m2), &m2);
+        assert_eq!(SeqMarked::max_ref(&m1, &m3), &m3);
+        assert_eq!(SeqMarked::max_ref(&m2, &m3), &m2);
+
+        assert_eq!(SeqMarked::max_ref(&m1, &m1), &m1);
+        assert_eq!(SeqMarked::max_ref(&m2, &m2), &m2);
+        assert_eq!(SeqMarked::max_ref(&m3, &m3), &m3);
+    }
+
+    #[test]
+    fn test_is_not_found() {
+        assert!(SeqMarked::<u64>::new_absent().is_not_found());
+        assert!(SeqMarked::<u64>::new_tombstone(0).is_not_found());
+        assert!(!SeqMarked::<u64>::new_tombstone(1).is_not_found());
+        assert!(!SeqMarked::<u64>::new_normal(1, 1).is_not_found());
     }
 }
 
