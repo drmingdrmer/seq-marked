@@ -20,12 +20,16 @@
 //! assert!(v2 < v2_ts); // ordered by tombstone > normal
 //! ```
 
+mod expirable;
 mod marked;
 mod seq_marked;
 mod seq_marked_conv;
+mod seq_value_trait;
+mod seqv;
 
 #[cfg(test)]
 pub(crate) mod testing;
 
+pub use expirable::Expirable;
 pub use marked::Marked;
 pub use seq_marked::SeqMarked;
