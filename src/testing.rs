@@ -2,7 +2,47 @@
 
 #![allow(dead_code)]
 
+use crate::Expirable;
 use crate::SeqMarked;
+use crate::SeqValue;
+
+/// Expirable implementation for testing purposes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct ExpirableImpl {
+    pub(crate) expires_at_ms: Option<u64>,
+}
+
+impl Expirable for ExpirableImpl {
+    fn expires_at_ms_opt(&self) -> Option<u64> {
+        self.expires_at_ms
+    }
+}
+
+/// A sequence value implementation for testing purposes.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub(crate) struct SeqValueImpl {
+    pub(crate) seq: u64,
+    pub(crate) value: Option<u64>,
+    pub(crate) meta: Option<ExpirableImpl>,
+}
+
+impl SeqValue<ExpirableImpl, u64> for SeqValueImpl {
+    fn seq(&self) -> u64 {
+        self.seq
+    }
+
+    fn value(&self) -> Option<&u64> {
+        self.value.as_ref()
+    }
+
+    fn into_value(self) -> Option<u64> {
+        self.value
+    }
+
+    fn meta(&self) -> Option<&ExpirableImpl> {
+        self.meta.as_ref()
+    }
+}
 
 /// Create a string.
 pub(crate) fn ss(x: impl ToString) -> String {

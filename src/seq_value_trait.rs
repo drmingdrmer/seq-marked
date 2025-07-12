@@ -1,4 +1,6 @@
 use crate::Expirable;
+#[cfg(doc)]
+use crate::SeqMarked;
 
 /// Trait for a value with a sequence number and metadata.
 ///
@@ -52,42 +54,7 @@ pub trait SeqValue<M, V = Vec<u8>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-    struct ExpirableImpl {
-        expires_at_ms: Option<u64>,
-    }
-
-    impl Expirable for ExpirableImpl {
-        fn expires_at_ms_opt(&self) -> Option<u64> {
-            self.expires_at_ms
-        }
-    }
-
-    #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-    struct SeqValueImpl {
-        seq: u64,
-        value: Option<u64>,
-        meta: Option<ExpirableImpl>,
-    }
-
-    impl SeqValue<ExpirableImpl, u64> for SeqValueImpl {
-        fn seq(&self) -> u64 {
-            self.seq
-        }
-
-        fn value(&self) -> Option<&u64> {
-            self.value.as_ref()
-        }
-
-        fn into_value(self) -> Option<u64> {
-            self.value
-        }
-
-        fn meta(&self) -> Option<&ExpirableImpl> {
-            self.meta.as_ref()
-        }
-    }
+    use crate::testing::*;
 
     #[test]
     fn test_seq_value_basic() {

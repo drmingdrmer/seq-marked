@@ -1,3 +1,5 @@
+mod seq_marked_impl;
+
 use std::fmt;
 
 use crate::Marked;
