@@ -1,4 +1,5 @@
-mod seq_marked_impl;
+mod impl_from_seqv;
+mod impl_seq_value;
 
 use std::fmt;
 
@@ -155,6 +156,10 @@ impl<D> SeqMarked<D> {
             Marked::Normal(data) => Some(data),
             Marked::TombStone => None,
         }
+    }
+
+    pub fn into_parts(self) -> (u64, Marked<D>) {
+        (self.seq, self.marked)
     }
 
     /// Returns formatter for display using `Debug` trait.
@@ -396,6 +401,14 @@ mod tests {
         assert!(SeqMarked::<u64>::new_tombstone(0).is_not_found());
         assert!(!SeqMarked::<u64>::new_tombstone(1).is_not_found());
         assert!(!SeqMarked::<u64>::new_normal(1, 1).is_not_found());
+    }
+
+    #[test]
+    fn test_into_parts() {
+        let seq_marked = SeqMarked::new_normal(5, "data");
+        let (seq, marked) = seq_marked.into_parts();
+        assert_eq!(seq, 5);
+        assert_eq!(marked, Marked::Normal("data"));
     }
 }
 
