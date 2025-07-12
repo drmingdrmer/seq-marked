@@ -23,5 +23,6 @@ serde_json = "1.0"
 
 default = []
 
+seqv-serde = ["dep:serde"]
 seqmarked-serde = ["dep:serde"]
 seqmarked-bincode = ["dep:bincode"]

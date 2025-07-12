@@ -50,6 +50,9 @@ jobs:
             features: ""
 
           - toolchain: "nightly"
+            features: "seqv-serde"
+
+          - toolchain: "nightly"
             features: "seqmarked-serde"
 
           - toolchain: "nightly"

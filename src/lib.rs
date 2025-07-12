@@ -34,3 +34,4 @@ pub use expirable::Expirable;
 pub use marked::Marked;
 pub use seq_marked::SeqMarked;
 pub use seq_value_trait::SeqValue;
+pub use seqv::SeqV;
