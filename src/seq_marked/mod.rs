@@ -18,7 +18,7 @@ use crate::Marked;
 /// assert!(v1 < v2);
 /// ```
 #[derive(Debug)]
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 #[derive(PartialEq, Eq)]
 #[derive(PartialOrd, Ord)]
 #[cfg_attr(
@@ -202,6 +202,13 @@ mod tests {
     use super::*;
     use crate::testing::norm;
     use crate::testing::ts;
+
+    #[test]
+    fn test_seq_marked_is_copy() {
+        let seq_marked = SeqMarked::new(5, Marked::Normal("data"));
+        let seq_marked_copy = seq_marked;
+        assert_eq!(seq_marked, seq_marked_copy);
+    }
 
     #[test]
     fn test_new() {

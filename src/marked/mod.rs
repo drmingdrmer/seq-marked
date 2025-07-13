@@ -12,7 +12,7 @@ mod impl_try_from_meta_bytes;
 /// assert!(tombstone > data);
 /// ```
 #[derive(Debug)]
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 #[derive(PartialEq, Eq)]
 #[derive(PartialOrd, Ord)]
 #[cfg_attr(
@@ -36,6 +36,13 @@ pub enum Marked<D> {
 mod tests {
 
     use super::*;
+
+    #[test]
+    fn test_marked_is_copy() {
+        let marked = Marked::Normal("data");
+        let marked_copy = marked;
+        assert_eq!(marked, marked_copy);
+    }
 
     #[test]
     fn test_marked_ord() {
