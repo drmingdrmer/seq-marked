@@ -178,13 +178,12 @@ impl<D> SeqMarked<D> {
         where D: fmt::Debug
         {
             fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-                write!(f, "seq: {}, ", self.0.seq)?;
+                write!(f, "{{seq: {}, ", self.0.seq)?;
                 match &self.0.marked {
-                    Marked::Normal(data) => {
-                        write!(f, "data: {:?}", data)
-                    }
-                    Marked::TombStone => write!(f, "tombstone"),
+                    Marked::Normal(data) => write!(f, "({:?})", data)?,
+                    Marked::TombStone => write!(f, "TOMBSTONE")?,
                 }
+                write!(f, "}}")
             }
         }
 
@@ -430,6 +429,24 @@ mod tests {
         let (seq, marked) = seq_marked.into_parts();
         assert_eq!(seq, 5);
         assert_eq!(marked, Marked::Normal("data"));
+    }
+
+    #[test]
+    fn test_display_with_debug() {
+        let seq_marked = SeqMarked::new_normal(5, "data");
+        assert_eq!(
+            format!("{}", seq_marked.display_with_debug()),
+            "{seq: 5, (\"data\")}"
+        );
+    }
+
+    #[test]
+    fn test_display_with_debug_tombstone() {
+        let seq_marked = SeqMarked::<u64>::new_tombstone(5);
+        assert_eq!(
+            format!("{}", seq_marked.display_with_debug()),
+            "{seq: 5, TOMBSTONE}"
+        );
     }
 }
 
