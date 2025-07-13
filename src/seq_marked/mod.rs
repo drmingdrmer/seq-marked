@@ -1,5 +1,6 @@
 mod impl_from_seqv;
 mod impl_seq_value;
+mod impl_try_from_meta_bytes;
 
 use std::fmt;
 
@@ -35,6 +36,11 @@ pub struct SeqMarked<D = Vec<u8>> {
 }
 
 impl<D> SeqMarked<D> {
+    /// Creates a new `SeqMarked` with sequence number and marked data.
+    pub fn new(seq: u64, marked: Marked<D>) -> Self {
+        Self { seq, marked }
+    }
+
     /// Creates normal value with sequence number.
     pub fn new_normal(seq: u64, data: D) -> Self {
         Self {
@@ -196,6 +202,13 @@ mod tests {
     use super::*;
     use crate::testing::norm;
     use crate::testing::ts;
+
+    #[test]
+    fn test_new() {
+        let seq_marked = SeqMarked::new(5, Marked::Normal("data"));
+        assert_eq!(seq_marked.seq, 5);
+        assert_eq!(seq_marked.marked, Marked::Normal("data"));
+    }
 
     #[test]
     fn test_map() -> anyhow::Result<()> {
