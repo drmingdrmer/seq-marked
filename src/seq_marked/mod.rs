@@ -12,7 +12,7 @@ use crate::Marked;
 /// Ordered by sequence number first, then tombstone > normal.
 ///
 /// ```rust
-/// use seqmarked::SeqMarked;
+/// use seq_marked::SeqMarked;
 ///
 /// let v1 = SeqMarked::new_normal(1, "data");
 /// let v2 = SeqMarked::<&str>::new_tombstone(2);
@@ -23,11 +23,11 @@ use crate::Marked;
 #[derive(PartialEq, Eq)]
 #[derive(PartialOrd, Ord)]
 #[cfg_attr(
-    feature = "seqmarked-serde",
+    feature = "seq-marked-serde",
     derive(serde::Serialize, serde::Deserialize)
 )]
 #[cfg_attr(
-    feature = "seqmarked-bincode",
+    feature = "seq-marked-bincode",
     derive(bincode::Encode, bincode::Decode)
 )]
 pub struct SeqMarked<D = Vec<u8>> {
@@ -92,7 +92,7 @@ impl<D> SeqMarked<D> {
     /// # Example
     ///
     /// ```rust
-    /// use seqmarked::SeqMarked;
+    /// use seq_marked::SeqMarked;
     ///
     /// let a = SeqMarked::new_normal(1, "data");
     /// let b = a.map(|x| x.len());
@@ -457,7 +457,7 @@ mod tests {
 }
 
 #[cfg(test)]
-#[cfg(feature = "seqmarked-bincode")]
+#[cfg(feature = "seq-marked-bincode")]
 mod tests_bincode {
 
     use super::*;
@@ -490,7 +490,7 @@ mod tests_bincode {
 }
 
 #[cfg(test)]
-#[cfg(feature = "seqmarked-serde")]
+#[cfg(feature = "seq-marked-serde")]
 mod tests_serde {
     use super::*;
     use crate::testing::test_serde_decode;

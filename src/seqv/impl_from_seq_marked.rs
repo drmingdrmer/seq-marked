@@ -18,7 +18,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_from_seqmarked_with_meta() {
+    fn test_from_seq_marked_with_meta() {
         let seq_marked = SeqMarked::new_normal(42, (Some("metadata".to_string()), 100u64));
         let seqv: Option<SeqV<String, u64>> = seq_marked.into();
 
@@ -30,7 +30,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_seqmarked_without_meta() {
+    fn test_from_seq_marked_without_meta() {
         let seq_marked = SeqMarked::new_normal(10, (None::<String>, 200u64));
         let seqv: Option<SeqV<String, u64>> = seq_marked.into();
 
@@ -42,7 +42,7 @@ mod tests {
     }
 
     #[test]
-    fn test_from_seqmarked_tombstone() {
+    fn test_from_seq_marked_tombstone() {
         let seq_marked = SeqMarked::<(Option<String>, u64)>::new_tombstone(5);
         let seqv: Option<SeqV<String, u64>> = seq_marked.into();
 

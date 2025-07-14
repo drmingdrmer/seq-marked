@@ -53,10 +53,10 @@ jobs:
             features: "seqv-serde"
 
           - toolchain: "nightly"
-            features: "seqmarked-serde"
+            features: "seq-marked-serde"
 
           - toolchain: "nightly"
-            features: "seqmarked-bincode"
+            features: "seq-marked-bincode"
 
     steps:
       - name: Setup | Checkout

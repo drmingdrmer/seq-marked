@@ -1,4 +1,4 @@
-mod impl_from_seqmarked;
+mod impl_from_seq_marked;
 mod impl_seq_value;
 
 use std::fmt;

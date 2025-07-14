@@ -1,4 +1,4 @@
-# seqmarked
+# seq-marked
 
 Sequence-numbered values with tombstone support for LSM trees and versioned data.
 
@@ -10,7 +10,7 @@ Sequence-numbered values with tombstone support for LSM trees and versioned data
 ## Usage
 
 ```rust
-use seqmarked::{Marked, SeqMarked};
+use seq_marked::{Marked, SeqMarked};
 
 // Basic sequence-numbered values
 let v1 = SeqMarked::new_normal(1, "data");

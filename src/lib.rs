@@ -1,4 +1,4 @@
-//! # seqmarked
+//! # seq-marked
 //!
 //! Sequence-numbered values with tombstone support for LSM trees and versioned data.
 //!
@@ -10,7 +10,7 @@
 //! ## Example
 //!
 //! ```rust
-//! use seqmarked::SeqMarked;
+//! use seq_marked::SeqMarked;
 //!
 //! let v1 = SeqMarked::new_normal(1, "data");
 //! let v2 = SeqMarked::new_normal(2, "data");

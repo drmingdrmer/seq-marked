@@ -6,7 +6,7 @@ mod impl_try_from_meta_bytes;
 /// Tombstones are always greater than normal values for ordering.
 ///
 /// ```rust
-/// use seqmarked::Marked;
+/// use seq_marked::Marked;
 ///
 /// let data = Marked::Normal("hello");
 /// let tombstone = Marked::<&str>::TombStone;
@@ -17,11 +17,11 @@ mod impl_try_from_meta_bytes;
 #[derive(PartialEq, Eq)]
 #[derive(PartialOrd, Ord)]
 #[cfg_attr(
-    feature = "seqmarked-serde",
+    feature = "seq-marked-serde",
     derive(serde::Serialize, serde::Deserialize)
 )]
 #[cfg_attr(
-    feature = "seqmarked-bincode",
+    feature = "seq-marked-bincode",
     derive(bincode::Encode, bincode::Decode)
 )]
 pub enum Marked<D> {
@@ -58,7 +58,7 @@ mod tests {
 }
 
 #[cfg(test)]
-#[cfg(feature = "seqmarked-bincode")]
+#[cfg(feature = "seq-marked-bincode")]
 mod tests_bincode {
 
     use super::*;
@@ -91,7 +91,7 @@ mod tests_bincode {
 }
 
 #[cfg(test)]
-#[cfg(feature = "seqmarked-serde")]
+#[cfg(feature = "seq-marked-serde")]
 mod tests_serde {
     use super::*;
     use crate::testing::test_serde_decode;
