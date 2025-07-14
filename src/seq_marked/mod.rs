@@ -59,15 +59,11 @@ impl<D> SeqMarked<D> {
     }
 
     /// Represents an absent record (not even marked as deleted).
-    pub fn new_absent() -> Self {
+    pub fn new_not_found() -> Self {
         Self {
             seq: 0,
             marked: Marked::TombStone,
         }
-    }
-
-    pub fn new_not_found() -> Self {
-        Self::new_absent()
     }
 
     /// Returns `true` if this is normal data.
@@ -110,6 +106,16 @@ impl<D> SeqMarked<D> {
                 Marked::TombStone => Marked::<U>::TombStone,
             },
         }
+    }
+
+    pub fn try_map<U, E>(self, f: impl FnOnce(D) -> Result<U, E>) -> Result<SeqMarked<U>, E> {
+        Ok(SeqMarked {
+            seq: self.seq,
+            marked: match self.marked {
+                Marked::Normal(data) => Marked::<U>::Normal(f(data)?),
+                Marked::TombStone => Marked::<U>::TombStone,
+            },
+        })
     }
 
     /// Creates reference to the data.
@@ -363,7 +369,7 @@ mod tests {
 
     #[test]
     fn test_new_absent() {
-        let absent = SeqMarked::<u64>::new_absent();
+        let absent = SeqMarked::<u64>::new_not_found();
         assert_eq!(absent.seq, 0);
         assert!(absent.is_tombstone());
     }
@@ -417,7 +423,7 @@ mod tests {
 
     #[test]
     fn test_is_not_found() {
-        assert!(SeqMarked::<u64>::new_absent().is_not_found());
+        assert!(SeqMarked::<u64>::new_not_found().is_not_found());
         assert!(SeqMarked::<u64>::new_tombstone(0).is_not_found());
         assert!(!SeqMarked::<u64>::new_tombstone(1).is_not_found());
         assert!(!SeqMarked::<u64>::new_normal(1, 1).is_not_found());
