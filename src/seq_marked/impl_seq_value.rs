@@ -4,7 +4,7 @@ use crate::SeqValue;
 /// [`SeqMarked`] is a superset of [`SeqValue`].
 impl<M, T> SeqValue<M, T> for SeqMarked<(Option<M>, T)> {
     fn seq(&self) -> u64 {
-        self.seq()
+        self.user_seq()
     }
 
     fn value(&self) -> Option<&T> {
@@ -54,12 +54,12 @@ mod tests {
     fn test_seq_value_tombstone() {
         let sv = SeqMarked::<(Option<String>, u64)>::new_tombstone(5);
 
-        assert_eq!(sv.seq(), 5);
+        assert_eq!(sv.seq(), 0);
         assert_eq!(sv.value(), None);
         assert_eq!(sv.meta(), None);
 
         let (seq, value) = sv.unpack();
-        assert_eq!(seq, 5);
+        assert_eq!(seq, 0);
         assert_eq!(value, None);
     }
 }

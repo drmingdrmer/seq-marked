@@ -36,7 +36,7 @@ mod tests {
 
         assert!(result.is_ok());
         let converted = result.unwrap();
-        assert_eq!(converted.seq(), 42);
+        assert_eq!(converted.internal_seq(), 42);
         assert_eq!(
             converted.data_ref(),
             Some(&(Some("metadata"), "hello".to_string()))
@@ -50,7 +50,7 @@ mod tests {
 
         assert!(result.is_ok());
         let converted = result.unwrap();
-        assert_eq!(converted.seq(), 10);
+        assert_eq!(converted.internal_seq(), 10);
         assert_eq!(converted.data_ref(), Some(&(None, "world".to_string())));
     }
 
@@ -61,7 +61,7 @@ mod tests {
 
         assert!(result.is_ok());
         let converted = result.unwrap();
-        assert_eq!(converted.seq(), 5);
+        assert_eq!(converted.internal_seq(), 5);
         assert!(converted.is_tombstone());
     }
 
@@ -81,7 +81,7 @@ mod tests {
         let seq_marked = SeqMarked::new_normal(30, (Some("metadata"), "hello".to_string()));
         let converted: SeqMarked<(Option<&str>, Vec<u8>)> = seq_marked.into();
 
-        assert_eq!(converted.seq(), 30);
+        assert_eq!(converted.internal_seq(), 30);
         assert_eq!(
             converted.data_ref(),
             Some(&(Some("metadata"), "hello".as_bytes().to_vec()))
@@ -93,7 +93,7 @@ mod tests {
         let seq_marked = SeqMarked::new_normal(15, (None::<String>, "world".to_string()));
         let converted: SeqMarked<(Option<String>, Vec<u8>)> = seq_marked.into();
 
-        assert_eq!(converted.seq(), 15);
+        assert_eq!(converted.internal_seq(), 15);
         assert_eq!(
             converted.data_ref(),
             Some(&(None, "world".as_bytes().to_vec()))
@@ -105,7 +105,7 @@ mod tests {
         let seq_marked = SeqMarked::<(Option<String>, String)>::new_tombstone(25);
         let converted: SeqMarked<(Option<String>, Vec<u8>)> = seq_marked.into();
 
-        assert_eq!(converted.seq(), 25);
+        assert_eq!(converted.internal_seq(), 25);
         assert!(converted.is_tombstone());
     }
 }

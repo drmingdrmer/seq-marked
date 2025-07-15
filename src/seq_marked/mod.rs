@@ -140,9 +140,14 @@ impl<D> SeqMarked<D> {
         }
     }
 
-    /// Returns the sequence number.
-    pub fn seq(&self) -> u64 {
+    /// Returns the sequence number for internal use, tombstone also has a seq.
+    pub fn internal_seq(&self) -> u64 {
         self.seq
+    }
+
+    /// Returns the sequence number for application use, tombstone always has seq 0.
+    pub fn user_seq(&self) -> u64 {
+        if self.is_tombstone() { 0 } else { self.seq }
     }
 
     /// Returns the maximum of two values.
@@ -435,6 +440,24 @@ mod tests {
         let (seq, marked) = seq_marked.into_parts();
         assert_eq!(seq, 5);
         assert_eq!(marked, Marked::Normal("data"));
+    }
+
+    #[test]
+    fn test_internal_seq() {
+        let seq_marked = SeqMarked::new_normal(5, "data");
+        assert_eq!(seq_marked.internal_seq(), 5);
+
+        let seq_marked_tombstone = SeqMarked::<u64>::new_tombstone(10);
+        assert_eq!(seq_marked_tombstone.internal_seq(), 10);
+    }
+
+    #[test]
+    fn test_user_seq() {
+        let seq_marked = SeqMarked::new_normal(5, "data");
+        assert_eq!(seq_marked.user_seq(), 5);
+
+        let seq_marked_tombstone = SeqMarked::<u64>::new_tombstone(10);
+        assert_eq!(seq_marked_tombstone.user_seq(), 0);
     }
 
     #[test]
