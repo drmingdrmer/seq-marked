@@ -2,10 +2,12 @@ mod impl_display;
 mod impl_from_seqv;
 mod impl_seq_value;
 mod impl_try_from_meta_bytes;
+mod internal_seq;
 
 use std::fmt;
 
 use crate::Marked;
+use crate::seq_marked::internal_seq::InternalSeq;
 
 /// Sequence-numbered marked value.
 ///
@@ -141,8 +143,8 @@ impl<D> SeqMarked<D> {
     }
 
     /// Returns the sequence number for internal use, tombstone also has a seq.
-    pub fn internal_seq(&self) -> u64 {
-        self.seq
+    pub fn internal_seq(&self) -> InternalSeq {
+        InternalSeq::new(self.seq)
     }
 
     /// Returns the sequence number for application use, tombstone always has seq 0.
@@ -445,10 +447,10 @@ mod tests {
     #[test]
     fn test_internal_seq() {
         let seq_marked = SeqMarked::new_normal(5, "data");
-        assert_eq!(seq_marked.internal_seq(), 5);
+        assert_eq!(*seq_marked.internal_seq(), 5);
 
         let seq_marked_tombstone = SeqMarked::<u64>::new_tombstone(10);
-        assert_eq!(seq_marked_tombstone.internal_seq(), 10);
+        assert_eq!(*seq_marked_tombstone.internal_seq(), 10);
     }
 
     #[test]
