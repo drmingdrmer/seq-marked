@@ -3,6 +3,8 @@ mod impl_from_seqv;
 mod impl_seq_value;
 mod impl_try_from_meta_bytes;
 mod internal_seq;
+mod order_key;
+mod ref_seq_marked;
 
 use std::fmt;
 

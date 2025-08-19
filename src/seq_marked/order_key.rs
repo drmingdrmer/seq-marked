@@ -1,0 +1,23 @@
+//! Implement the `SeqMarked<()>` which is used as an order key.
+
+use crate::seq_marked::SeqMarked;
+
+impl SeqMarked<()> {
+    /// Creates the smallest order key (seq=0, normal).
+    pub fn zero() -> Self {
+        Self::new_normal(0, ())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::Marked;
+
+    #[test]
+    fn test_zero() {
+        let zero = SeqMarked::<()>::zero();
+        assert_eq!(zero.seq, 0);
+        assert_eq!(zero.marked, Marked::Normal(()));
+    }
+}
