@@ -9,7 +9,7 @@ mod ref_seq_marked;
 use std::fmt;
 
 use crate::Marked;
-use crate::seq_marked::internal_seq::InternalSeq;
+pub use crate::seq_marked::internal_seq::InternalSeq;
 
 /// Sequence-numbered marked value.
 ///
@@ -68,6 +68,10 @@ impl<D> SeqMarked<D> {
             seq: 0,
             marked: Marked::TombStone,
         }
+    }
+
+    pub fn to_tombstone(self) -> Self {
+        Self::new_tombstone(self.seq)
     }
 
     /// Returns `true` if this is normal data.
@@ -381,6 +385,14 @@ mod tests {
         let absent = SeqMarked::<u64>::new_not_found();
         assert_eq!(absent.seq, 0);
         assert!(absent.is_tombstone());
+    }
+
+    #[test]
+    fn test_to_tombstone() {
+        let a = SeqMarked::new_normal(1, "data");
+        let b = a.to_tombstone();
+        assert_eq!(b.seq, 1);
+        assert!(b.is_tombstone());
     }
 
     #[test]

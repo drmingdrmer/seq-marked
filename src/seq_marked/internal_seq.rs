@@ -1,3 +1,6 @@
+use std::fmt;
+use std::ops::Add;
+use std::ops::AddAssign;
 use std::ops::Deref;
 use std::ops::DerefMut;
 
@@ -30,8 +33,28 @@ impl DerefMut for InternalSeq {
 }
 
 impl InternalSeq {
-    pub fn new(seq: u64) -> Self {
+    pub const fn new(seq: u64) -> Self {
         Self { seq }
+    }
+}
+
+impl fmt::Display for InternalSeq {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "ISeq({})", self.seq)
+    }
+}
+
+impl Add<u64> for InternalSeq {
+    type Output = Self;
+
+    fn add(self, rhs: u64) -> Self::Output {
+        Self::new(self.seq + rhs)
+    }
+}
+
+impl AddAssign<u64> for InternalSeq {
+    fn add_assign(&mut self, rhs: u64) {
+        self.seq += rhs;
     }
 }
 
@@ -76,5 +99,26 @@ mod tests {
             std::mem::size_of::<InternalSeq>(),
             std::mem::size_of::<u64>()
         );
+    }
+
+    #[test]
+    fn test_display() {
+        let seq = InternalSeq::new(42);
+        assert_eq!(format!("{}", seq), "ISeq(42)");
+    }
+
+    #[test]
+    fn test_add_assign() {
+        let mut seq = InternalSeq::new(42);
+        seq += 10;
+        assert_eq!(seq, InternalSeq::new(52));
+    }
+
+    #[test]
+    fn test_add() {
+        let seq = InternalSeq::new(42);
+        let result = seq + 10;
+        assert_eq!(result, InternalSeq::new(52));
+        assert_eq!(seq, InternalSeq::new(42)); // Original unchanged
     }
 }
