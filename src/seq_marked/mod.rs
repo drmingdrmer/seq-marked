@@ -1,4 +1,5 @@
 mod impl_display;
+mod impl_from_seq_data;
 mod impl_from_seqv;
 mod impl_seq_value;
 mod impl_try_from_meta_bytes;

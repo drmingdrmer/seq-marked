@@ -22,6 +22,7 @@
 
 mod expirable;
 mod marked;
+mod seq_data;
 mod seq_marked;
 mod seq_value_trait;
 mod seqv;
@@ -31,6 +32,7 @@ pub(crate) mod testing;
 
 pub use expirable::Expirable;
 pub use marked::Marked;
+pub use seq_data::SeqData;
 pub use seq_marked::InternalSeq;
 pub use seq_marked::SeqMarked;
 pub use seq_value_trait::SeqValue;
