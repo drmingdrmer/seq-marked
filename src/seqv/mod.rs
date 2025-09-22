@@ -1,3 +1,4 @@
+mod impl_from_seq_data;
 mod impl_from_seq_marked;
 mod impl_seq_value;
 
